@@ -22,7 +22,7 @@ jobs:
         DOCKERFILE: micro1.prod.Dockerfile
       run: |
         CHANGES_MICRO1=$(git diff --name-only HEAD^ apps/micro1)
-        if [ -z $CHANGES_MICRO1 ]
+        if [ ! -z $CHANGES_MICRO2 ]
         then
           export COMMITS=$(git rev-list --count HEAD)
           export COMMIT_SHA=$(git rev-parse --short HEAD)
@@ -38,7 +38,7 @@ jobs:
         DOCKERFILE: micro2.prod.Dockerfile
       run: |
         CHANGES_MICRO2=$(git diff --name-only HEAD^ apps/micro2)
-        if [ -z $CHANGES_MICRO2 ]
+        if [ ! -z $CHANGES_MICRO2 ]
         then
           export COMMITS=$(git rev-list --count HEAD)
           export COMMIT_SHA=$(git rev-parse --short HEAD)
