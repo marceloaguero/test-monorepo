@@ -21,10 +21,14 @@ jobs:
         IMAGE_PREFIX: qa
         DOCKERFILE: micro1.prod.Dockerfile
       run: |
-        export COMMITS=$(git rev-list --count HEAD)
-        export COMMIT_SHA=$(git rev-parse --short HEAD)
-        export VERSION="${DOCKERHUB_USR}/${APP_NAME}:${IMAGE_PREFIX}-${COMMITS}-${COMMIT_SHA}"
-        docker build . --file $DOCKERFILE --tag $VERSION
+        git diff --name-only --exit-code HEAD^ apps/micro1
+        if [ $? -eq 1 ]
+        then
+          export COMMITS=$(git rev-list --count HEAD)
+          export COMMIT_SHA=$(git rev-parse --short HEAD)
+          export VERSION="${DOCKERHUB_USR}/${APP_NAME}:${IMAGE_PREFIX}-${COMMITS}-${COMMIT_SHA}"
+          docker build . --file $DOCKERFILE --tag $VERSION
+        fi
 
     - name: Build docker image (micro2)
       env:
@@ -33,7 +37,11 @@ jobs:
         IMAGE_PREFIX: qa
         DOCKERFILE: micro2.prod.Dockerfile
       run: |
-        export COMMITS=$(git rev-list --count HEAD)
-        export COMMIT_SHA=$(git rev-parse --short HEAD)
-        export VERSION="${DOCKERHUB_USR}/${APP_NAME}:${IMAGE_PREFIX}-${COMMITS}-${COMMIT_SHA}"
-        docker build . --file $DOCKERFILE --tag $VERSION
+        git diff --name-only --exit-code HEAD^ apps/micro2
+        if [ $? -eq 1 ]
+        then
+          export COMMITS=$(git rev-list --count HEAD)
+          export COMMIT_SHA=$(git rev-parse --short HEAD)
+          export VERSION="${DOCKERHUB_USR}/${APP_NAME}:${IMAGE_PREFIX}-${COMMITS}-${COMMIT_SHA}"
+          docker build . --file $DOCKERFILE --tag $VERSION
+        fi
