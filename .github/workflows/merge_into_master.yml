@@ -1,0 +1,39 @@
+name: Merge into master branch
+
+on:
+  push:
+    branches: master
+
+jobs:
+
+  docker-image:
+    name: Build docker image for QA
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v1
+
+    - name: Build docker image (micro1)
+      env:
+        DOCKERHUB_USR: smartraining
+        APP_NAME: micro1
+        IMAGE_PREFIX: qa
+        DOCKERFILE: micro1.prod.Dockerfile
+      run: |
+        export COMMITS=$(git rev-list --count HEAD)
+        export COMMIT_SHA=$(git rev-parse --short HEAD)
+        export VERSION="${DOCKERHUB_USR}/${APP_NAME}:${IMAGE_PREFIX}-${COMMITS}-${COMMIT_SHA}"
+        docker build . --file $DOCKERFILE --tag $VERSION
+
+    - name: Build docker image (micro2)
+      env:
+        DOCKERHUB_USR: smartraining
+        APP_NAME: micro2
+        IMAGE_PREFIX: qa
+        DOCKERFILE: micro2.prod.Dockerfile
+      run: |
+        export COMMITS=$(git rev-list --count HEAD)
+        export COMMIT_SHA=$(git rev-parse --short HEAD)
+        export VERSION="${DOCKERHUB_USR}/${APP_NAME}:${IMAGE_PREFIX}-${COMMITS}-${COMMIT_SHA}"
+        docker build . --file $DOCKERFILE --tag $VERSION
