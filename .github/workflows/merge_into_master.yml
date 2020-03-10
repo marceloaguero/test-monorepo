@@ -7,14 +7,14 @@ on:
 jobs:
 
   docker-image:
-    name: Build docker image for QA
+    name: Build docker images for QA
     runs-on: ubuntu-latest
 
     steps:
     - name: Check out code
       uses: actions/checkout@v1
 
-    - name: Build docker image (micro1)
+    - name: Build micro1 docker image (if there were changes)
       env:
         DOCKERHUB_USR: smartraining
         APP_NAME: micro1
@@ -30,7 +30,7 @@ jobs:
           docker build . --file $DOCKERFILE --tag $VERSION
         fi
 
-    - name: Build docker image (micro2)
+    - name: Build micro2 docker image (if there were changes)
       env:
         DOCKERHUB_USR: smartraining
         APP_NAME: micro2
